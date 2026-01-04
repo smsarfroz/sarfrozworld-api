@@ -20,12 +20,13 @@ app.get('/auth/google',
   passport.authenticate('google', { scope: ['email', 'profile' ]})
 );
 
-app.get('/auth/google/callback',
+app.get('/google/callback',
   passport.authenticate( 'google', {
     successRedirect: '/protected',
     failureRedirect: '/auth/google/failure'
   })
 );
+
 
 app.get('/protected', isLoggedIn, (req, res) => {
   res.send(`Hello ${req.user.displayName}`);

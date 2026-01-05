@@ -1,6 +1,10 @@
 import express from "express";
 import session from "express-session";
 import passport from "passport";
+import homeRouter from "./routes/homeRouter.js";
+import logoutRouter from "./routes/logoutRouter.js";
+import cors from 'cors';
+
 import './auth.js';
 const app = express();
 
@@ -22,21 +26,14 @@ app.get('/auth/google',
 
 app.get('/google/callback',
   passport.authenticate( 'google', {
-    successRedirect: '/protected',
+    successRedirect: '/home',
     failureRedirect: '/auth/google/failure'
   })
 );
 
+app.use('/home', isLoggedIn, homeRouter);
 
-app.get('/protected', isLoggedIn, (req, res) => {
-  res.send(`Hello ${req.user.displayName}`);
-});
-
-app.get('/logout', (req, res) => {
-  req.logout();
-  req.session.destroy();
-  res.send('Goodbye!');
-});
+app.use('/logout', logoutRouter);
 
 app.get('/auth/google/failure', (req, res) => {
   res.send('Failed to authenticate...');

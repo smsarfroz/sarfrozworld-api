@@ -6,6 +6,10 @@ import logoutRouter from "./routes/logoutRouter.js";
 import cors from 'cors';
 
 import './auth.js';
+import postRouter from "./routes/postRouter.js";
+import profileRouter from "./routes/profileRouter.js";
+import searchRouter from "./routes/searchRouter.js";
+import commentRouter from "./routes/commentRouter.js";
 const app = express();
 
 function isLoggedIn(req, res, next) {
@@ -34,6 +38,10 @@ app.get('/google/callback',
 app.use('/home', isLoggedIn, homeRouter);
 
 app.use('/logout', logoutRouter);
+app.use('/post', postRouter);
+app.use('/profile', profileRouter);
+app.use('/search', searchRouter);
+app.use('/posts/:postid/comments', commentRouter)
 
 app.get('/auth/google/failure', (req, res) => {
   res.send('Failed to authenticate...');
@@ -43,9 +51,6 @@ app.get("/", (req, res) => res.send("Hello, world!"));
 
 const PORT = 3000;
 app.listen(PORT, (error) => {
-  // This is important!
-  // Without this, any startup errors will silently fail
-  // instead of giving you a helpful error message.
   if (error) {
     throw error;
   }

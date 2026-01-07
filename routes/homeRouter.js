@@ -1,9 +1,8 @@
 import { Router } from "express";
+import getAllPosts from "../controllers/homeRouter/getAllPosts.js";
 
 const homeRouter = Router();
 
-homeRouter.get("/", (req, res) => {
-    res.send(`Hello ${req.user.displayName}`);
-});
+homeRouter.get("/", getAllPosts);
 
 export default homeRouter;

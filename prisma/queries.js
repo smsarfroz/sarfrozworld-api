@@ -33,10 +33,13 @@ async function postComment() {
     }
 }
 
-async function findOrCreate(googleId ,username, photo) {
+async function findOrCreate(googleId ,username , photo) {
     try {   
         let user = await prisma.User.upsert({
             where: { googleId: googleId},
+            update: {
+                
+            },
             create: {
                 googleId: googleId,
                 username: username, 

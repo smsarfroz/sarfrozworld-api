@@ -7,9 +7,8 @@ import cors from 'cors';
 
 import './auth.js';
 import postRouter from "./routes/postRouter.js";
-import profileRouter from "./routes/profileRouter.js";
-import searchRouter from "./routes/searchRouter.js";
 import commentRouter from "./routes/commentRouter.js";
+import usersRouter from "./routes/usersRouter.js";
 const app = express();
 
 function isLoggedIn(req, res, next) {
@@ -36,11 +35,9 @@ app.get('/google/callback',
 );
 
 app.use('/home', isLoggedIn, homeRouter);
-
+app.use('/users', usersRouter);
 app.use('/logout', logoutRouter);
 app.use('/post', postRouter);
-app.use('/profile', profileRouter);
-app.use('/search', searchRouter);
 app.use('/posts/:postid/comments', commentRouter)
 
 app.get('/auth/google/failure', (req, res) => {

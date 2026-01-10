@@ -52,10 +52,24 @@ async function findOrCreate(googleId ,username , photo) {
     }
 };
 
+async function getUserbyUserName(username) {
+    try {
+        let user = await prisma.User.findUnique({
+            where: {
+                username: username
+            }
+        })
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export default {
     getAllPosts,
     getAllCommentsbyPostid,
     deleteCommentbyId,
     postComment,
-    findOrCreate
+    findOrCreate,
+    getUserbyUserName
 }

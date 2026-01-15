@@ -65,11 +65,33 @@ async function getUserbyUserName(username) {
     }
 }
 
+async function updateUser(username, followers, following, posts, bio, website, github) {
+    try {
+        const UpdateUser = await prisma.User.update({
+            where: {
+                username: username
+            },
+            data: {
+                followers: followers,
+                following: following,
+                posts: posts, 
+                bio: bio,
+                website: website,
+                github: github
+            }
+        })
+        return UpdateUser;
+    } catch (error) {   
+        console.error(error);
+    }
+}
+
 export default {
     getAllPosts,
     getAllCommentsbyPostid,
     deleteCommentbyId,
     postComment,
     findOrCreate,
-    getUserbyUserName
+    getUserbyUserName,
+    updateUser
 }

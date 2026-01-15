@@ -15,9 +15,18 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json()); 
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: true,
+  cookie: {
+    secure: false,
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000 
+  }
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -48,10 +57,18 @@ app.get('/auth/google/failure', (req, res) => {
 
 app.get("/", (req, res) => res.send("Hello, world!"));
 
+// const PORT = 3000;
+// app.listen(PORT, (error) => {
+//   if (error) {
+//     throw error;
+//   }
+//   console.log(`My first Express app - listening on port ${PORT}!`);
+// });
+
 const PORT = 3000;
-app.listen(PORT, (error) => {
-  if (error) {
-    throw error;
-  }
-  console.log(`My first Express app - listening on port ${PORT}!`);
+const server = app.listen(PORT);
+server.keepAliveTimeout = 30000; 
+server.headersTimeout = 31000; 
+app.listen(PORT, () => {
+  console.log(`Express app - listening on port ${PORT}!`);
 });

@@ -16,7 +16,7 @@ passport.use(new GoogleStrategy({
     // User.findOrCreate({ googleId: profile.id }, function (err, user) {
     //   return done(err, user);
     // });
-
+    console.log('accessToken, refreshToken', accessToken, refreshToken);
     try {
       let user = await prisma.findOrCreate(profile.id, profile.displayName, profile.picture);
       console.log('done', user);

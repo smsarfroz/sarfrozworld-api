@@ -86,6 +86,21 @@ async function updateUser(username, followers, following, posts, bio, website, g
     }
 }
 
+async function addPost(username, text, imageLink) {
+    try {
+        const post = await prisma.Post.create({
+            data: {
+                username: username,
+                text: text,
+                imageLink: imageLink
+            }
+        }) 
+        return post; 
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export default {
     getAllPosts,
     getAllCommentsbyPostid,
@@ -93,5 +108,6 @@ export default {
     postComment,
     findOrCreate,
     getUserbyUserName,
-    updateUser
+    updateUser,
+    addPost
 }

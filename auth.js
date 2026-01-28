@@ -28,10 +28,12 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
+    console.log('user is serializeUser', user);
     done(null, user);
 });
 
 passport.deserializeUser(function(user, done) {
+    console.log("user in deserializerUser", user);
     done(null, user);
 });
 

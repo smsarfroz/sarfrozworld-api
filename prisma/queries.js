@@ -9,9 +9,17 @@ async function getAllPosts() {
     }
 };
 
-async function getAllCommentsbyPostid() {
+async function getAllCommentsbyPostid(postId) {
     try {
-
+        const comments = await prisma.Comment.findMany({
+            where: {
+                postId: postId
+            },
+            include: {
+                user: true
+            }
+        }) 
+        return comments;
     } catch (error) {
         console.error(error);
     }

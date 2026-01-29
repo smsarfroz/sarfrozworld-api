@@ -16,8 +16,16 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+  // origin: 'http://127.0.0.1:5173', 
+  // origin: "*",
+  credentials: true,
+  exposedHeaders: ['set-cookie']
+}));
+
 app.use(express.json()); 
-app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,
+app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
   cookie: {
     secure: false,
     sameSite: 'lax',
@@ -29,11 +37,7 @@ app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitializ
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-  credentials: true,
-  exposedHeaders: ['set-cookie']
-}));
+
 
 app.use((req, res, next) => {
   console.log('Session:', req.session);

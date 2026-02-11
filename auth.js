@@ -28,13 +28,21 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-    console.log('user is serializeUser', user);
-    done(null, user);
+    console.log('user.id is serializeUser', user.id);
+    done(null, user.id);
 });
 
-passport.deserializeUser(function(user, done) {
-    console.log("user in deserializerUser", user);
-    done(null, user);
+passport.deserializeUser(async (id, done) => {
+    // console.log("user in deserializerUser", user);
+    try {
+      console.log('in deserializeUser');
+      const user = await prisma.getUserbyId(id);
+      console.log('user retrieved from db in deserializeUser', user, id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
 });
 
 export default "auth"
+

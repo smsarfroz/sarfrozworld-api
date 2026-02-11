@@ -4,7 +4,7 @@ import updateUser from "../controllers/usersRouter/updateUser.js";
 
 const usersRouter = Router();
 
-usersRouter.get("/profile", getUser);
+usersRouter.post("/profile", getUser);
 usersRouter.post("/profile", updateUser);    
 // usersRouter.get("/", getAllUsers);
 

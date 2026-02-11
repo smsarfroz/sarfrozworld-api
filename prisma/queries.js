@@ -60,11 +60,13 @@ async function findOrCreate(googleId ,username , photo) {
     }
 };
 
-async function getUserbyUserName(username) {
+async function addnewuser(username, password, photo) {
     try {
-        let user = await prisma.User.findUnique({
-            where: {
-                username: username
+        const user = await prisma.User.create({
+            data: {
+                username: username,
+                password: password,
+                photo: photo
             }
         })
         return user;
@@ -72,6 +74,33 @@ async function getUserbyUserName(username) {
         console.error(error);
     }
 }
+
+async function getUserbyUserId(userId) {
+    try {
+        let user = await prisma.User.findUnique({
+            where: {
+                id: userId
+            }
+        })
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getUserbyId(id) {
+    try {
+        let user = await prisma.User.findUnique({
+            where: {
+                id: id
+            }
+        })
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 async function updateUser(username, followers, following, posts, bio, website, github) {
     try {
@@ -114,8 +143,13 @@ export default {
     getAllCommentsbyPostid,
     deleteCommentbyId,
     postComment,
-    findOrCreate,
-    getUserbyUserName,
+    // findOrCreate,
+    getUserbyUserId,
+    getUserbyId,
     updateUser,
-    addPost
+    addPost,
+    addnewuser
 }
+
+
+

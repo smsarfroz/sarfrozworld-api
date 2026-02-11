@@ -6,10 +6,12 @@ import logoutRouter from "./routes/logoutRouter.js";
 import dotenv from 'dotenv'
 import cors from 'cors';
 
-import './auth.js';
+// import './auth.js';
 import postRouter from "./routes/postRouter.js";
 import commentRouter from "./routes/commentRouter.js";
 import usersRouter from "./routes/usersRouter.js";
+import signupRouter from "./routes/signupRouter.js";
+import loginRouter from "./routes/loginRouter.js";
 const app = express();
 
 function isLoggedIn(req, res, next) {
@@ -18,58 +20,50 @@ function isLoggedIn(req, res, next) {
 
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
-  // origin: 'http://127.0.0.1:5173', 
-  // origin: "*",
   credentials: true,
   exposedHeaders: ['set-cookie']
 }));
 
 app.use(express.json()); 
-app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: false,
+app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,
   cookie: {
     secure: false,
-    sameSite: 'lax',
+    sameSite: 'Lax',
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true, 
-    domain: 'localhost'
+    // domain: 'localhost'
   }
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 
 
-
-app.use((req, res, next) => {
-  console.log('Session:', req.session);
-  console.log('User:', req.user);
-  console.log('Cookies:', req.headers.cookie);
-  next();
-});
-
 app.get('/', (req, res) => {
   res.send('<a href="/auth/google">Authenticate with Google<a/>');
 });
 
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['email', 'profile' ]})
-);
+// app.get('/auth/google',
+//   passport.authenticate('google', { scope: ['email', 'profile' ]})
+// );
 
-app.get('/google/callback',
-  passport.authenticate( 'google', {
-    successRedirect: '/home',
-    failureRedirect: '/auth/google/failure'
-  })
-);
+// app.get('/google/callback',
+//   passport.authenticate( 'google', {
+//     successRedirect: '/home',
+//     failureRedirect: '/auth/google/failure'
+//   })
+// );
 
-app.use('/home', isLoggedIn, homeRouter);
-app.use('/users', usersRouter);
+app.use('/home', homeRouter);
+app.use('/users', usersRouter); 
 app.use('/logout', logoutRouter);
 app.use('/post', postRouter);
 app.use('/posts/:postid/comments', commentRouter)
+app.use('/signup', signupRouter);
+app.use('/login', loginRouter);
 
-app.get('/auth/google/failure', (req, res) => {
-  res.send('Failed to authenticate...');
-});
+// app.get('/auth/google/failure', (req, res) => {
+//   res.send('Failed to authenticate...');
+// });
 
 // const PORT = 3000;
 // app.listen(PORT, (error) => {

@@ -3,11 +3,54 @@ const prisma = new PrismaClient();
 
 async function getAllPosts() {
     try {
-
+        const posts = await prisma.Post.findMany({
+            include: {
+                user: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+        return posts;
     } catch (error) {
         console.error(error);
     }
 };
+
+async function getAllPostsbyLikes() {
+    try {
+        const posts = await prisma.Post.findMany({
+            include: {
+                user: true
+            },
+            orderBy: {
+                likes: 'desc'
+            }
+        });
+        return posts;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getAllPostsbyUserId(userId) {
+    try {       
+        const posts = await prisma.Post.findMany({
+            where: {
+                userId: userId
+            }, 
+            include: {
+                user: true
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+        return posts; 
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 async function getAllCommentsbyPostid(postId) {
     try {
@@ -18,7 +61,7 @@ async function getAllCommentsbyPostid(postId) {
             include: {
                 user: true
             }
-        }) 
+        })
         return comments;
     } catch (error) {
         console.error(error);
@@ -80,19 +123,9 @@ async function getUserbyUserId(userId) {
         let user = await prisma.User.findUnique({
             where: {
                 id: userId
-            }
-        })
-        return user;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function getUserbyId(id) {
-    try {
-        let user = await prisma.User.findUnique({
-            where: {
-                id: id
+            },
+            include: {
+                posts: true
             }
         })
         return user;
@@ -102,16 +135,14 @@ async function getUserbyId(id) {
 }
 
 
-async function updateUser(username, followers, following, posts, bio, website, github) {
+async function updateUserbyUserId(userId, bio, github, website) {
+    console.log('query function', userId, bio);
     try {
         const UpdateUser = await prisma.User.update({
             where: {
-                username: username
+                id: userId
             },
             data: {
-                followers: followers,
-                following: following,
-                posts: posts, 
                 bio: bio,
                 website: website,
                 github: github
@@ -123,13 +154,13 @@ async function updateUser(username, followers, following, posts, bio, website, g
     }
 }
 
-async function addPost(username, text, imageLink) {
+async function addPost(userId, text, imageLink) {
     try {
         const post = await prisma.Post.create({
             data: {
-                username: username,
+                userId: userId,
                 text: text,
-                imageLink: imageLink
+                imageLink: imageLink,
             }
         }) 
         return post; 
@@ -138,18 +169,93 @@ async function addPost(username, text, imageLink) {
     }
 }
 
+async function updatePostInc(postId, userId) {
+    try {
+        const post = await prisma.Post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                likes: {
+                    increment: 1
+                }, 
+                likedByUsers: {
+                    push: userId
+                }
+            }
+        })
+        return post;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function updatePostDec(postId, userId) {
+    try {
+        const post = await prisma.Post.findUnique({
+            where: {
+                id: postId
+            }
+        });
+
+        const updatedArray = post.likedByUsers.filter(
+            (id) => id !== userId
+        );
+
+        const post2 = await prisma.Post.update({
+            where: {
+                id: postId
+            },
+            data: {
+                likes: {
+                    decrement: 1
+                }, 
+                likedByUsers: updatedArray
+            }
+        })
+        return post2;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getLikesStateArray(userId) {
+    const posts = await prisma.post.findMany({
+        select: {
+            id: true,
+            likes: true,
+            likedByUsers: true
+        }
+    });
+
+    const likesState = posts.reduce((accumulator, currentPost) => {
+        accumulator[currentPost.id] = {
+            liked: currentPost.liked.includes(userId),
+            likesCount: currentPost.likes
+        }
+    })
+    return likesState;
+}
+
+
 export default {
     getAllPosts,
     getAllCommentsbyPostid,
     deleteCommentbyId,
     postComment,
-    // findOrCreate,
     getUserbyUserId,
-    getUserbyId,
-    updateUser,
+    updateUserbyUserId,
     addPost,
-    addnewuser
+    addnewuser,
+    getAllPostsbyUserId,
+    getAllPostsbyLikes,
+    updatePostInc,
+    updatePostDec,
+    getLikesStateArray
 }
+
+
+
 
 
 

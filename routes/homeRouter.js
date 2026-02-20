@@ -3,6 +3,6 @@ import getAllPosts from "../controllers/homeRouter/getAllPosts.js";
 
 const homeRouter = Router();
 
-homeRouter.get("/", getAllPosts);
+homeRouter.post("/", getAllPosts);
 
 export default homeRouter;

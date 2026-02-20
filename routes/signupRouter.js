@@ -17,7 +17,6 @@ signupRouter.post("/", async(req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const hash = getGravatarHash(`${req.body.username}@gmail.com`);
-        // const hash = getGravatarHash(`ssarfroz@gmail.com`);
         const profileUrl = `https://gravatar.com/avatar/${hash}?s=256&d=identicon`;
         console.log('hashedPassord', hashedPassword, hash);
         const user = await prisma.addnewuser(req.body.username, hashedPassword, profileUrl);

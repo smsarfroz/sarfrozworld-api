@@ -2,8 +2,7 @@ import prisma from '../../prisma/queries.js';
 
 const getUser = async(req, res) => {
     try {
-
-        console.log('req.body', req.body);
+        // console.log('req.body', req.body);
         // if (!req.user || !req.user.username) {
         //     return res.status(401).json({ error: 'Not authenticated' });
         // }
@@ -11,7 +10,7 @@ const getUser = async(req, res) => {
         const { userId } = req.body;
         const user = await Promise.all([prisma.getUserbyUserId(userId)]);
 
-        console.log('user found from table ', user);
+        // console.log('user found from table ', user);
         res.json(user);
     } catch (error) {
         console.error(error);

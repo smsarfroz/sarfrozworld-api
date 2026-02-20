@@ -2,10 +2,10 @@ import prisma from '../../prisma/queries.js';
 
 const addPost = async(req, res) => {
     try {
-        const { text, imageLink } = req.body;
-        console.log('req.user', req.user);
-        const username = req.user.username;
-        const post = await prisma.addPost(username, text, imageLink);
+        const { text, imageLink, userId } = req.body;
+        // console.log('req.body in addPost', req.body);
+        const post = await prisma.addPost(userId, text, imageLink);
+        // console.log('returned post', post);
         res.json(post);
     } catch (error) {
         console.error(error);

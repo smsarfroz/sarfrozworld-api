@@ -158,9 +158,12 @@ async function addPost(userId, text, imageLink) {
     try {
         const post = await prisma.Post.create({
             data: {
-                userId: userId,
+                // userId: userId,
                 text: text,
-                imageLink: imageLink,
+                ...(imageLink && { imageLink: imageLink }),
+                user: {
+                    connect: { id: userId }
+                }
             }
         }) 
         return post; 
@@ -230,13 +233,23 @@ async function getLikesStateArray(userId) {
 
     const likesState = posts.reduce((accumulator, currentPost) => {
         accumulator[currentPost.id] = {
-            liked: currentPost.liked.includes(userId),
+            liked: currentPost.likedByUsers.includes(userId),
             likesCount: currentPost.likes
         }
-    })
+        return accumulator;
+    },{});
+
     return likesState;
 }
 
+async function deletePost(postId) {
+    const post = await prisma.post.delete({
+        where: {
+            id: postId
+        }
+    });
+    return post;
+}
 
 export default {
     getAllPosts,
@@ -251,7 +264,8 @@ export default {
     getAllPostsbyLikes,
     updatePostInc,
     updatePostDec,
-    getLikesStateArray
+    getLikesStateArray,
+    deletePost
 }
 
 

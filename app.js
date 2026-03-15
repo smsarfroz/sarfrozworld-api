@@ -67,7 +67,7 @@ app.use('/home', homeRouter);
 app.use('/users', usersRouter); 
 app.use('/logout', logoutRouter);
 app.use('/post', postRouter);
-app.use('/posts/:postid/comments', commentRouter)
+app.use('/posts/:postId/comments', commentRouter)
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/uploadfile', uploadFileRouter);

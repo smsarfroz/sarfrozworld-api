@@ -5,7 +5,8 @@ const logoutRouter = Router();
 logoutRouter.get("/", (req, res) => {
   req.logout(() => {
     req.session.destroy();
-    res.send('Goodbye!');
+    res.json('Goodbye!');
+    // res.send('Goodbye!');
   })
 });
 

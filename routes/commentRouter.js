@@ -1,10 +1,13 @@
 import { Router } from "express";
-import getAllCommentsbyPostid from "../prisma/queries.js";
-import deleteCommentbyId from "../prisma/queries.js";
+import express from 'express';
+import addComment from "../controllers/CommentsRouter/addComment.js";
+import getAllComments from "../controllers/CommentsRouter/getAllComments.js";
+import deleteComment from "../controllers/CommentsRouter/deleteComment.js";
 
-const commentRouter = Router();
+const commentRouter = express.Router({ mergeParams: true });
 
-// commentRouter.get("/", getAllCommentsbyPostid);
-// commentRouter.delete("/:commentid", deleteCommentbyId);
+commentRouter.get("/", getAllComments);
+commentRouter.delete("/:commentId", deleteComment);
+commentRouter.post("/", addComment);
 
 export default commentRouter;

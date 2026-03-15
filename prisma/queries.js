@@ -5,7 +5,8 @@ async function getAllPosts() {
     try {
         const posts = await prisma.Post.findMany({
             include: {
-                user: true
+                user: true,
+                comments: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -21,7 +22,8 @@ async function getAllPostsbyLikes() {
     try {
         const posts = await prisma.Post.findMany({
             include: {
-                user: true
+                user: true,
+                comments: true
             },
             orderBy: {
                 likes: 'desc'
@@ -40,7 +42,8 @@ async function getAllPostsbyUserId(userId) {
                 userId: userId
             }, 
             include: {
-                user: true
+                user: true,
+                comments: true
             },
             orderBy: {
                 createdAt: 'desc'
@@ -125,10 +128,23 @@ async function getUserbyUserId(userId) {
                 id: userId
             },
             include: {
-                posts: true
+                posts: {
+                    include: {
+                        comments: true
+                    }
+                }
             }
         })
         return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function getUsers() {
+    try {
+        let users = await prisma.User.findMany();
+        return users;
     } catch (error) {
         console.error(error);
     }
@@ -251,6 +267,83 @@ async function deletePost(postId) {
     return post;
 }
 
+async function deleteComment(commentId) {
+    const comment = await prisma.Comment.delete({
+        where: {
+            id: commentId
+        }
+    });
+    return comment;
+}
+
+async function getPostbyPostId(postId) {
+    const post = await prisma.post.findUnique({
+        where: {
+            id: postId
+        },
+        include: {
+            user: true,
+            comments: true
+        }
+    });
+    return post;
+}
+
+async function addComment(postId, userId, content) {
+    const comment = await prisma.Comment.create({
+        data: {
+            content: content,
+            post: {
+                connect: { id: postId }
+            },
+            user: {
+                connect: { id: userId }
+            }
+        },
+        include: {
+            user: true,
+            post: true
+        }
+    });
+    return comment;
+}
+
+async function increaseFollowers(userId) {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                followers: {
+                    increment: 1
+                }
+            }
+        })
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function increaseFollowing(userId) {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                following: {
+                    increment: 1
+                }
+            }
+        })
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export default {
     getAllPosts,
     getAllCommentsbyPostid,
@@ -265,7 +358,13 @@ export default {
     updatePostInc,
     updatePostDec,
     getLikesStateArray,
-    deletePost
+    deletePost,
+    getUsers,
+    getPostbyPostId,
+    addComment,
+    deleteComment,
+    increaseFollowers,
+    increaseFollowing
 }
 
 

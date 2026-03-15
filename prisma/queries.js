@@ -308,41 +308,79 @@ async function addComment(postId, userId, content) {
     return comment;
 }
 
-async function increaseFollowers(userId) {
+async function followUser(id1, id2) {
     try {
-        const user = await prisma.user.update({
+        const user1 = await prisma.user.update({
             where: {
-                id: userId
+                id: id1
             },
             data: {
-                followers: {
-                    increment: 1
+                following: {
+                    push: id2
                 }
             }
         })
-        res.json(user);
+        const user2 = await prisma.user.update({
+            where: {
+                id: id2
+            },
+            data: {
+                followers: {
+                    push: id1
+                }
+            }
+        })
+        res.json('done');
     } catch (error) {
         console.error(error);
     }
 }
 
-async function increaseFollowing(userId) {
+async function unfollowUser(id1, id2) {
     try {
-        const user = await prisma.user.update({
+        const user1 = await prisma.user.findUnique({
             where: {
-                id: userId
+                id: id1
+            }
+        });
+
+        const updatedList1 = user1.following.filter(
+            id => id != id2
+        );
+
+        const user2 = await prisma.user.findUnique({
+            where: {
+                id: id1
+            }
+        });
+
+        const updatedList2 = user1.followers.filter(
+            id => id != id1
+        );
+
+
+        await prisma.user.update({
+            where: {
+                id: id1
             },
             data: {
-                following: {
-                    increment: 1
-                }
+                following: updatedList1
             }
         })
-        res.json(user);
+        await prisma.user.update({
+            where: {
+                id: id2
+            },
+            data: {
+                followers: updatedList2
+            }
+        })
+        res.json('done');
     } catch (error) {
         console.error(error);
     }
 }
+
 
 export default {
     getAllPosts,
@@ -363,9 +401,9 @@ export default {
     getPostbyPostId,
     addComment,
     deleteComment,
-    increaseFollowers,
-    increaseFollowing
-}
+    followUser,
+    unfollowUser
+}   
 
 
 

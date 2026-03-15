@@ -31,8 +31,8 @@ model User {
   username  String    @unique
   password  String
   photo     String?
-  followers Int?
-  following Int?
+  followers Int[]
+  following Int[]
   bio       String?
   website   String?
   github    String?

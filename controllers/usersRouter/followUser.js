@@ -3,7 +3,7 @@ import prisma from '../../prisma/queries.js';
 const followUser = async(req, res) => {
     try {
         const { id1, id2 } = req.body;
-        const user = await prisma.followUser(id1, id2);
+        await prisma.followUser(id1, id2);
 
         res.json('done');
     } catch (error) {
@@ -13,3 +13,4 @@ const followUser = async(req, res) => {
 };
 
 export default followUser;
+

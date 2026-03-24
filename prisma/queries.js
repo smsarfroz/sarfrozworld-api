@@ -141,6 +141,19 @@ async function getUserbyUserId(userId) {
     }
 }
 
+async function getUserbyUserName(username) {
+    try {
+        let user = await prisma.User.findUnique({
+            where: {
+                username: username
+            }
+        });
+        return user;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function getUsers() {
     try {
         let users = await prisma.User.findMany();
@@ -330,7 +343,6 @@ async function followUser(id1, id2) {
                 }
             }
         })
-        res.json('done');
     } catch (error) {
         console.error(error);
     }
@@ -375,7 +387,6 @@ async function unfollowUser(id1, id2) {
                 followers: updatedList2
             }
         })
-        res.json('done');
     } catch (error) {
         console.error(error);
     }
@@ -388,6 +399,7 @@ export default {
     deleteCommentbyId,
     postComment,
     getUserbyUserId,
+    getUserbyUserName,
     updateUserbyUserId,
     addPost,
     addnewuser,

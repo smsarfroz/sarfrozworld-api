@@ -5,7 +5,6 @@ const logoutRouter = Router();
 logoutRouter.get("/", (req, res) => {
   req.logout(() => {
     req.session.destroy((err) => {
-      console.log('err from logout', err);
       if (err) {
         console.error(err);
         return res.status(500).json("Error logging out");

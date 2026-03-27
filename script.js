@@ -2,7 +2,7 @@ import { prisma } from './lib/prisma.js';
 
 async function main() {
   // Create a new user with a post
-  const user = await prisma.user.create({
+  /* const user = await prisma.user.create({
     data: {
       name: 'Alice',
       email: 'alice@prisma.io',
@@ -26,7 +26,21 @@ async function main() {
       posts: true,
     },
   })
-  console.log('All users:', JSON.stringify(allUsers, null, 2))
+  console.log('All users:', JSON.stringify(allUsers, null, 2)) */
+
+  const guest = await prisma.User.create({
+    data: {
+      username: "Guest User",
+      password: "sharedpassword123",
+      photo: "https://github.com/smsarfroz/sarfrozworld/blob/main/src/assets/no-profile-picture-15258_256.png",
+      followers: [],
+      following: [],
+      bio: "Hello! I am a shared guest account.",
+      website: "",
+      github: "https://github.com/"
+    }
+  });
+  console.log('guest', guest);
 }
 
 main()

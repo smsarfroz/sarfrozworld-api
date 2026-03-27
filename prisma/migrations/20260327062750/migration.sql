@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "followers" SET DEFAULT ARRAY[]::INTEGER[],
+ALTER COLUMN "following" SET DEFAULT ARRAY[]::INTEGER[];

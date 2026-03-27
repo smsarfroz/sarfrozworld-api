@@ -1,11 +1,11 @@
 import { Router } from "express";
 import prisma from '../prisma/queries.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
 
 const loginRouter = Router();
 
 loginRouter.post("/", async(req, res) => {
-
     try {
         const user = {
             username: req.body.username,
@@ -13,12 +13,14 @@ loginRouter.post("/", async(req, res) => {
         }
         const User = await prisma.getUserbyUserName(req.body.username);
 
-        if (!User) {
+        console.log("User", User);
+        if (!User) {    
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
         const isPasswordValid = await bcrypt.compare(user.password, User.password);
 
+        console.log('isPasswordValid', isPasswordValid, user.password, User.password);
         if (!isPasswordValid) {
             return res.status(401).json({ error: "Invalid credentials"});
         }

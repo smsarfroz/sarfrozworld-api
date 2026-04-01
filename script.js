@@ -32,7 +32,7 @@ async function main() {
     data: {
       username: "Guest User",
       password: "sharedpassword123",
-      photo: "https://github.com/smsarfroz/sarfrozworld/blob/main/src/assets/no-profile-picture-15258_256.png",
+      photo: "https://raw.githubusercontent.com/smsarfroz/sarfrozworld/refs/heads/main/src/assets/no-profile-picture-15258_256.png",
       followers: [],
       following: [],
       bio: "Hello! I am a shared guest account.",

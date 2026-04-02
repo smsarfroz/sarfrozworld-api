@@ -1,16 +1,30 @@
+import { validationResult } from 'express-validator';
 import prisma from '../../prisma/queries.js';
+import { JSDOM } from 'jsdom';
+import DOMPurify from 'dompurify';
 
-const updateUser = async(req, res) => {
+const window = new JSDOM('').window;
+const purify = DOMPurify(window);
+
+const validateDetails = [
+    body('bio').trim().escape().isLength({ max: 300 }),
+    body('github').trim().matches(/^[a-zA-Z0-9-]+$/).isLength({ min: 1, max: 39 }),
+    body('website').trim().matches(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/)
+];
+
+const updateUser = [validateDetails, async(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    const cleanBio = purify.sanitize(req.body.bio);
     try {
-        // console.log('req.body', req.body);
         const { userId, bio, github, website } = req.body;
-        const user = await Promise.all([prisma.updateUserbyUserId(userId, bio, github, website)]);
-
-        // console.log('returned user', user);
+        const user = await prisma.updateUserbyUserId(userId, bio: cleanBio, github, website);
+ 
         res.json(user);
     } catch (error) {
         console.error(error);
     }
-};
+}];
 
 export default updateUser;

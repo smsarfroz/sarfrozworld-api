@@ -1,11 +1,15 @@
 import prisma from '../../prisma/queries.js';
+import sanitizeHtml from 'sanitize-html';
 
 const addPost = async(req, res) => {
     try {
         const { text, imageLink, userId } = req.body;
-        // console.log('req.body in addPost', req.body);
-        const post = await prisma.addPost(userId, text, imageLink);
-        // console.log('returned post', post);
+        const cleanContent = sanitizeHtml(text, {
+            allowedTags: ['b', 'i', 'em', 'strong', 'p'], 
+            allowedAttributes: { 'a': ['href'] }
+        })
+        if (cleanContent.length > 2000) return res.send(400).send("Post too long");
+        const post = await prisma.addPost(userId, cleanContent, imageLink);
         res.json(post);
     } catch (error) {
         console.error(error);

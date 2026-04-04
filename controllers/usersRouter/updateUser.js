@@ -1,4 +1,4 @@
-import { validationResult } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 import prisma from '../../prisma/queries.js';
 import { JSDOM } from 'jsdom';
 import DOMPurify from 'dompurify';
@@ -19,11 +19,12 @@ const updateUser = [validateDetails, async(req, res) => {
     const cleanBio = purify.sanitize(req.body.bio);
     try {
         const { userId, bio, github, website } = req.body;
-        const user = await prisma.updateUserbyUserId(userId, bio: cleanBio, github, website);
+        const user = await prisma.updateUserbyUserId(userId, cleanBio, github, website);
  
         res.json(user);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: error.message });
     }
 }];
 

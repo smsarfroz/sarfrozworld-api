@@ -1,6 +1,7 @@
 import { body, validationResult } from 'express-validator';
 import prisma from '../../prisma/queries.js';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 
 function getGravatarHash(email) {
   email = email.trim().toLowerCase();
@@ -34,11 +35,12 @@ const signup = [validateUser, async(req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const hash = getGravatarHash(`${req.body.username}@gmail.com`);
         const profileUrl = `https://gravatar.com/avatar/${hash}?s=256&d=identicon`;
-        console.log('hashedPassord', hashedPassword, hash);
+        // console.log('hashedPassord', hashedPassword, hash);
         const user = await prisma.addnewuser(req.body.username, hashedPassword, profileUrl);
         res.json(user);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: "Server error during sign up" });
     }
 }];
 

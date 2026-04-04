@@ -8,6 +8,7 @@ const getAllPosts = async(req, res) => {
         res.json(posts);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: error.message });
     }
 };
 

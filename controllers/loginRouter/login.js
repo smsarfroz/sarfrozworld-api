@@ -7,14 +7,14 @@ import { body, validationResult } from "express-validator";
 const validateUser = [
     body('username')   
         .trim().escape()
-        .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long.'),
+        // .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long.'),
 
-    body('password') 
+    /* body('password') 
         .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
         .matches(/[A-Z]/).withMessage('Password must contain an uppercase letter')
         .matches(/[a-z]/).withMessage('Password must contain a lowercase letter')
         .matches(/\d/).withMessage('Password must container a number')
-        .matches(/[!@#$%^&*(),.?":{}|<>]/).withMessage('Password must contain a special character'),
+        .matches(/[!@#$%^&*(),.?":{}|<>]/).withMessage('Password must contain a special character'), */
 ];
 
 const login = [validateUser, async(req, res) => {
@@ -26,12 +26,13 @@ const login = [validateUser, async(req, res) => {
     if (!errors.isEmpty() && !(user.username == "Guest User" && user.password == "sharedpassword123")) {
         return res.status(400).json({ errors: errors.array() });
     }
+
     try {
         
         const User = await prisma.getUserbyUserName(req.body.username);
 
-        if (!User) {    
-            return res.status(401).json({ error: "Invalid credentials" });
+        if (!User) {   
+            return res.status(401).json({ error: `user ${req.body.username} doesn't exist.` });
         }
         
         let guest = false;
@@ -41,9 +42,8 @@ const login = [validateUser, async(req, res) => {
 
         const isPasswordValid = await bcrypt.compare(user.password, User.password);
 
-        // console.log('isPasswordValid', isPasswordValid, user.password, User.password);
         if (!isPasswordValid && !guest) {
-            return res.status(401).json({ error: "Invalid credentials"});
+            return res.status(401).json({ error: "Wrong password. Please try again."});
         }
 
         const payload = {

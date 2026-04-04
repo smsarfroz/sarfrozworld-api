@@ -19,7 +19,7 @@ const uploadFileController = async(req, res) => {
                 });
         } catch (uploadError) {
             console.error('Upload threw exception:', uploadError);
-            return res.status(500).send('Upload Error uploading to Supabase.');
+            return res.status(500).json({error: 'Upload Error uploading to Supabase.'});
         }
 
         const { data, error } = result;
@@ -27,7 +27,7 @@ const uploadFileController = async(req, res) => {
         console.log('result', result);
         
         if (error) {
-            return res.status(500).send('Error uploading to Supabase.');
+            return res.status(500).send({error: 'Error uploading to Supabase.'});
         }
 
         console.log('data', data);

@@ -13,6 +13,7 @@ const addPost = async(req, res) => {
         res.json(post);
     } catch (error) {
         console.error(error);
+        res.status(500).json({ error: "Server error while adding the post.", error});
     }
 };
 

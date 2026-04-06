@@ -9,13 +9,22 @@ const uploadFileController = async(req, res) => {
         const bucketname = 'files';
         const fileBuffer = fs.readFileSync(path);
         
+        console.log('req.file', req.file);
+
+        const fileExt = req.file.filename.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
         console.log('path, fileBuffer', path, fileBuffer);
+
         let result;
         try {
             result = await supabase.storage
                 .from(bucketname)
-                .upload(path, fileBuffer, {
+                .upload(filePath, fileBuffer, {
                     contentType: req.file.mimetype,
+                    cacheControl: '3600', 
+                    upsert: true
                 });
         } catch (uploadError) {
             console.error('Upload threw exception:', uploadError);

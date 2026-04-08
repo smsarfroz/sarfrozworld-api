@@ -15,7 +15,19 @@ const uploadFileController = async(req, res) => {
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        console.log('path, fileBuffer', path, fileBuffer);
+        const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+        console.log('Buckets:', buckets);
+        
+        const fileBucket = buckets?.find(b => b.name === 'files');
+        if (!fileBucket) {
+            console.error('Bucket "files" does not exist!');
+            const { error: createError } = await supabase.storage.createBucket('files', {
+                public: true
+            });
+            if (createError) console.error('Error creating bucket:', createError);
+        } else {
+            console.log('Bucket "files" exists:', fileBucket);
+        }
 
         let result;
         try {
@@ -24,10 +36,21 @@ const uploadFileController = async(req, res) => {
                 .upload(filePath, fileBuffer, {
                     contentType: req.file.mimetype,
                     cacheControl: '3600', 
-                    upsert: true
+                    upsert: false
                 });
+
+             if (result.error) {
+                console.error('Upload error details:', {
+                    message: result.error.message,
+                    name: result.error.name,
+                    status: result.error.status
+                });
+            }
         } catch (uploadError) {
-            console.error('Upload threw exception:', uploadError);
+            console.error('Upload threw exception:', {
+                message: uploadError.message,
+                stack: uploadError.stack
+            });
             return res.status(500).json({error: 'Upload Error uploading to Supabase.'});
         }
 
@@ -43,7 +66,7 @@ const uploadFileController = async(req, res) => {
 
         const { data: publicUrlData } = supabase.storage 
             .from('files')
-            .getPublicUrl(path);
+            .getPublicUrl(filePath);
 
         const publicUrl = publicUrlData.publicUrl;
 

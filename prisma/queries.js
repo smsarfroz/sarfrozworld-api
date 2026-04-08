@@ -185,6 +185,7 @@ async function updateUserbyUserId(userId, bio, github, website) {
 
 async function addPost(userId, text, imageLink) {
     try {
+        console.log("imageLink", imageLink);
         const post = await prisma.Post.create({
             data: {
                 // userId: userId,

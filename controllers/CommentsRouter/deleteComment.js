@@ -5,7 +5,10 @@ const deleteComment = async(req, res) => {
         const { commentId } = req.params;
         console.log('commentId', commentId);
         const comment = await prisma.deleteComment(parseInt(commentId));
-        res.json(comment);
+        res.status(200).json({
+            message: "comment deleted successfully",
+            comment: comment
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });

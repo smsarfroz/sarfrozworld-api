@@ -12,7 +12,7 @@ const addComment = async(req, res) => {
         const comment = await prisma.addComment(postId, userId, cleantComment);
         res.status(200).json({
             message: "comment added successfully",
-            comment
+            comment: comment
         });
     } catch (error) {
         console.error(error);

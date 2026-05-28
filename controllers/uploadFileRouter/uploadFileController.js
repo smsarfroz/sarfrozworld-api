@@ -15,20 +15,6 @@ const uploadFileController = async(req, res) => {
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        const { data: buckets, error: listError } = await supabase.storage.listBuckets();
-        console.log('Buckets:', buckets);
-        
-        const fileBucket = buckets?.find(b => b.name === 'files');
-        if (!fileBucket) {
-            console.error('Bucket "files" does not exist!');
-            const { error: createError } = await supabase.storage.createBucket('files', {
-                public: true
-            });
-            if (createError) console.error('Error creating bucket:', createError);
-        } else {
-            console.log('Bucket "files" exists:', fileBucket);
-        }
-
         let result;
         try {
             result = await supabase.storage
@@ -56,13 +42,13 @@ const uploadFileController = async(req, res) => {
 
         const { data, error } = result;
 
-        console.log('result', result);
+        // console.log('result', result);
         
         if (error) {
             return res.status(500).send({error: 'Error uploading to Supabase.'});
         }
 
-        console.log('data', data);
+        // console.log('data', data);
 
         const { data: publicUrlData } = supabase.storage 
             .from('files')
@@ -70,7 +56,7 @@ const uploadFileController = async(req, res) => {
 
         const publicUrl = publicUrlData.publicUrl;
 
-        console.log('publicUrl', publicUrl);
+        // console.log('publicUrl', publicUrl);
 
         res.json(publicUrl);
 

@@ -9,7 +9,7 @@ const purify = DOMPurify(window);
 const validateDetails = [
     body('bio').trim().escape().isLength({ max: 300 }),
     body('github').trim().matches(/^[a-zA-Z0-9-]+$/).isLength({ min: 1, max: 39 }),
-    body('website').trim().matches(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/)
+    // body('website').trim().matches(/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/)
 ];
 
 const updateUser = [validateDetails, async(req, res) => {

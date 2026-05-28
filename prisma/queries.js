@@ -123,6 +123,7 @@ async function addnewuser(username, password, photo) {
 
 async function getUserbyUserId(userId) {
     try {
+        console.log('userId in query', userId);
         let user = await prisma.User.findUnique({
             where: {
                 id: userId
@@ -135,6 +136,7 @@ async function getUserbyUserId(userId) {
                 }
             }
         })
+        console.log('user in prisma query', user);
         return user;
     } catch (error) {
         console.error(error);

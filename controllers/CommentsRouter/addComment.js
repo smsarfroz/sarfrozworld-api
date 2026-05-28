@@ -10,7 +10,10 @@ const addComment = async(req, res) => {
         });
         if (cleantComment.length > 500 ) return res.status(400).send("Comment too long");
         const comment = await prisma.addComment(postId, userId, cleantComment);
-        res.json(comment);
+        res.status(200).json({
+            message: "comment added successfully",
+            comment
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });

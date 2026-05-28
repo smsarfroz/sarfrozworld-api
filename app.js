@@ -3,7 +3,7 @@ import session from "express-session";
 import passport from "passport";
 import homeRouter from "./routes/homeRouter.js";
 import logoutRouter from "./routes/logoutRouter.js";
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import cors from 'cors';
 
 // import './auth.js';
@@ -13,6 +13,7 @@ import usersRouter from "./routes/usersRouter.js";
 import signupRouter from "./routes/signupRouter.js";
 import loginRouter from "./routes/loginRouter.js";
 import uploadFileRouter from "./routes/uploadFileRouter.js";
+import cookieParser from "cookie-parser";
 const app = express();
 
 function isLoggedIn(req, res, next) {
@@ -46,7 +47,7 @@ app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitializ
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.send('<a href="/auth/google">Authenticate with Google<a/>');

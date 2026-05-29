@@ -1,0 +1,50 @@
+import commentRouter from "../../routes/commentRouter.js";
+import express from "express";
+import request from "supertest";
+import prisma from "../../prisma/queries.js";
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use('/posts/:postId/comments', commentRouter)
+
+jest.mock('../../prisma/queries.js', () => ({
+    getAllCommentsbyPostid: jest.fn()
+}));
+
+describe('GET /posts/:postId/comments', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
+    })
+
+    test('should return all the comments', async () => {
+        prisma.getAllCommentsbyPostid.mockResolvedValue([{
+            postId: 1,
+            userId: 2,
+            content: "first comment"
+        }]);
+
+        const postId = 1;
+
+        const response = await request(app)
+            .get(`/posts/${postId}/comments`)
+            .expect("Content-Type", "application/json; charset=utf-8")
+            .expect(res => {
+                expect(res.body.comments).toEqual([
+                    {
+                        postId: 1,
+                        userId: 2,
+                        content: "first comment"
+                    }
+                ]);
+            })
+            .expect(200);
+
+        expect(response.body.message).toEqual('all comments returned successfully');
+    })
+})

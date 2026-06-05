@@ -10,7 +10,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/posts/:postId/comments', commentRouter)
 
 jest.mock('../../prisma/queries.js', () => ({
-    addComment: jest.fn()
+    addComment: jest.fn(),
+    getAllCommentsbyPostid: jest.fn()
 }));
 
 describe('POST /posts/:postId/comments', () => {
@@ -29,6 +30,12 @@ describe('POST /posts/:postId/comments', () => {
             content: "first comment"
         });
 
+        prisma.getAllCommentsbyPostid.mockResolvedValue({
+            postId: 1,
+            userId: 1,
+            content: "first comment"
+        })
+        
         const postId = 1;
         const requestBody = {
             postId: 1,
@@ -36,13 +43,21 @@ describe('POST /posts/:postId/comments', () => {
             content: "first comment"
         }
 
-        const response = await request(app)
+        await request(app)
             .post(`/posts/${postId}/comments`)
             .send(requestBody)
-            .expect("Content-Type", "application/json; charset=utf-8")
-            // .expect(response => {console.log(response)})
             .expect(200);
 
-        expect(response.body.message).toEqual('comment added successfully');
+        const getResponse = await request(app)
+            .get(`/posts/${postId}/comments`)
+            .expect(200);
+
+        expect(getResponse.body.comments).toEqual({
+            postId: 1,   
+            userId: 1,
+            content: "first comment"
+        });
+
+        // expect(response.body.message).toEqual('comment added successfully');
     })
 })

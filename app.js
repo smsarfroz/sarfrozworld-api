@@ -96,7 +96,7 @@ app.use('/uploadfile', uploadFileRouter);
 //   console.log(`My first Express app - listening on port ${PORT}!`);
 // });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
   console.log(`Express app - listening on port ${PORT}!`);
 });;

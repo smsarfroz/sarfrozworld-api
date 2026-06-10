@@ -29,11 +29,22 @@ app.use((req, res, next) => {
   next();
 });
 
+// app.use(cors({
+//   origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173', "https://github.com/", "https://sarfrozworld-api.onrender.com", "https://sarfrozworld-ms.vercel.app"],
+//   credentials: true,
+//   exposedHeaders: ['set-cookie']
+// }));
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173', "https://github.com/"],
+  origin: [
+    'http://127.0.0.1:5173',
+    'http://localhost:5173',
+    'https://sarfrozworld-ms.vercel.app'   
+  ],
   credentials: true,
   exposedHeaders: ['set-cookie']
 }));
+
 
 app.use(express.json()); 
 app.use(session({ secret: process.env.SECRET_KEY, resave: false, saveUninitialized: true,

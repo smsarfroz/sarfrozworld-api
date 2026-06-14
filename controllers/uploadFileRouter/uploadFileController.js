@@ -9,7 +9,7 @@ const uploadFileController = async(req, res) => {
         const bucketname = 'files';
         const fileBuffer = fs.readFileSync(path);
         
-        console.log('req.file', req.file);
+        // console.log('req.file', req.file);
 
         const fileExt = req.file.filename.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;

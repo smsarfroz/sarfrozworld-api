@@ -39,7 +39,8 @@ app.use(cors({
   origin: [
     'http://127.0.0.1:5173',
     'http://localhost:5173',
-    'https://sarfrozworld-ms.vercel.app'   
+    'https://sarfrozworld-ms.vercel.app',
+    'https://api.giphy.com'
   ],
   credentials: true,
   exposedHeaders: ['set-cookie']

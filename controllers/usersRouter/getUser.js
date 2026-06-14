@@ -3,7 +3,7 @@ import prisma from '../../prisma/queries.js';
 const getUser = async(req, res) => {
     try {
         const { userId } = req.body;
-        console.log('userId', userId);
+        // console.log('userId', userId);
         if (userId == undefined) {
             return res.status(400).json({ error: "User ID is required" });
         }

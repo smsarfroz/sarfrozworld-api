@@ -26,9 +26,9 @@ const validateUser = [
 
 const signup = [validateUser, async(req, res) => {
     const errors = validationResult(req);
-    console.log("errors", errors, errors.array());
+    // console.log("errors", errors, errors.array());
     if (!errors.isEmpty()) {
-        console.log(true);
+        // console.log(true);
         return res.status(400).json({ errors: errors.array() });
     }
     try {

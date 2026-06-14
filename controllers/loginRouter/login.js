@@ -22,7 +22,7 @@ const login = [validateUser, async(req, res) => {
         username: req.body.username,
         password: req.body.password
     }
-    console.log('check user details', user.username, user.password);
+    // console.log('check user details', user.username, user.password);
     const errors = validationResult(req);
     if (!errors.isEmpty() && !(user.username == "Guest User" && user.password == "sharedpassword123")) {
         return res.status(400).json({ errors: errors.array() });
@@ -32,7 +32,7 @@ const login = [validateUser, async(req, res) => {
         
         const User = await prisma.getUserbyUserName(req.body.username);
 
-        console.log("User", User);
+        // console.log("User", User);
         if (!User) {   
             return res.status(401).json({ error: `user ${req.body.username} doesn't exist.` });
         }

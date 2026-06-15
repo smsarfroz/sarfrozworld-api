@@ -14,6 +14,7 @@ import signupRouter from "./routes/signupRouter.js";
 import loginRouter from "./routes/loginRouter.js";
 import uploadFileRouter from "./routes/uploadFileRouter.js";
 import cookieParser from "cookie-parser";
+import getGifs from "./controllers/gifRouter/getGifs.js";
 const app = express();
 
 function isLoggedIn(req, res, next) {
@@ -84,6 +85,7 @@ app.use('/posts/:postId/comments', commentRouter)
 app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 app.use('/uploadfile', uploadFileRouter);
+app.use('/gifs/search', getGifs);
 
 // app.get('/auth/google/failure', (req, res) => {
 //   res.send('Failed to authenticate...');

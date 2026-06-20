@@ -7,7 +7,7 @@ import getPost from "../controllers/postRouter/getPost.js";
 const postRouter = Router();
 
 postRouter.get("/", (req, res) => {
-    res.send(`post page`);
+    res.json(`post page`);
 });
 postRouter.get('/:postId', getPost);
 postRouter.post("/", addPost);

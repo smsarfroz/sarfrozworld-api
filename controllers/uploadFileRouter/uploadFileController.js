@@ -9,8 +9,6 @@ const uploadFileController = async(req, res) => {
         const bucketname = 'files';
         const fileBuffer = fs.readFileSync(path);
         
-        // console.log('req.file', req.file);
-
         const fileExt = req.file.filename.split('.').pop();
         const fileName = `${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
@@ -42,21 +40,15 @@ const uploadFileController = async(req, res) => {
 
         const { data, error } = result;
 
-        // console.log('result', result);
-        
         if (error) {
             return res.status(500).send({error: 'Error uploading to Supabase.'});
         }
-
-        // console.log('data', data);
 
         const { data: publicUrlData } = supabase.storage 
             .from('files')
             .getPublicUrl(filePath);
 
         const publicUrl = publicUrlData.publicUrl;
-
-        // console.log('publicUrl', publicUrl);
 
         res.json(publicUrl);
 

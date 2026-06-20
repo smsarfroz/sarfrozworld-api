@@ -87,17 +87,6 @@ app.use('/login', loginRouter);
 app.use('/uploadfile', uploadFileRouter);
 app.use('/gifs/search', getGifs);
 
-// app.get('/auth/google/failure', (req, res) => {
-//   res.send('Failed to authenticate...');
-// });
-
-// const PORT = 3000;
-// app.listen(PORT, (error) => {
-//   if (error) {
-//     throw error;
-//   }
-//   console.log(`My first Express app - listening on port ${PORT}!`);
-// });
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {

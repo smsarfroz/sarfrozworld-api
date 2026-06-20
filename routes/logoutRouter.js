@@ -20,8 +20,6 @@ logoutRouter.post("/", (req, res) => {
       res.status(200).json("User has been logged out");
       
     });
-    // res.json('Goodbye!');
-    // res.send('Goodbye!');
   })
 });
 

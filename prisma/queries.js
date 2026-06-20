@@ -123,7 +123,6 @@ async function addnewuser(username, password, photo) {
 
 async function getUserbyUserId(userId) {
     try {
-        console.log('userId in query', userId);
         let user = await prisma.User.findUnique({
             where: {
                 id: userId
@@ -136,7 +135,6 @@ async function getUserbyUserId(userId) {
                 }
             }
         })
-        console.log('user in prisma query', user);
         return user;
     } catch (error) {
         console.error(error);
@@ -167,7 +165,6 @@ async function getUsers() {
 
 
 async function updateUserbyUserId(userId, bio, github, website) {
-    console.log('query function', userId, bio);
     try {
         const UpdateUser = await prisma.User.update({
             where: {
@@ -187,7 +184,6 @@ async function updateUserbyUserId(userId, bio, github, website) {
 
 async function addPost(userId, text, imageLink) {
     try {
-        console.log("imageLink", imageLink);
         const post = await prisma.Post.create({
             data: {
                 // userId: userId,

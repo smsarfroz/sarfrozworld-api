@@ -26,16 +26,13 @@ const validateUser = [
 
 const signup = [validateUser, async(req, res) => {
     const errors = validationResult(req);
-    // console.log("errors", errors, errors.array());
     if (!errors.isEmpty()) {
-        // console.log(true);
         return res.status(400).json({ errors: errors.array() });
     }
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const hash = getGravatarHash(`${req.body.username}@gmail.com`);
         const profileUrl = `https://gravatar.com/avatar/${hash}?s=256&d=identicon`;
-        // console.log('hashedPassord', hashedPassword, hash);
         const user = await prisma.addnewuser(req.body.username, hashedPassword, profileUrl);
         res.json(user);
     } catch (error) {
